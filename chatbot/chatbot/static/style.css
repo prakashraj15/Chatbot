@@ -74,6 +74,54 @@ html {
   height: auto;
 }
 
+a:link {
+  text-decoration: none;
+  color: black;
+}
+
+a:visited {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  text-decoration: none;
+  color: white;
+}
+
+a:active {
+  text-decoration: none;
+  color: black;
+}
+
+.div {
+  display: flex;
+  justify-content: end;
+}
+
+.heading {
+  font-style: italic;
+  font-weight: 300;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.redirect {
+  display: flex;
+  justify-content: end;
+  text-align: center;
+  padding: 6px;
+  cursor: pointer;
+  margin: 6px;
+  border-radius: 8%;
+  border: 2px solid rgb(142, 0, 55);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
+
+.redirect:hover {
+  color: white;
+  background: rgb(142, 0, 55);
+}
+
 .send__button__local,
 .send__button__openai {
   padding: 6px;

@@ -10,15 +10,17 @@ def index_get():
     return render_template("base.html")
 
 
+@app.get("/auto")
+def openai_get():
+    return render_template("openai.html")
+
+
 @app.post("/openAi")
 def openAi():
     text = request.get_json().get("message")
-    if (text == 'open ai'):
-        return None
-    else:
-        response = get_reply(text)
-        message = {"answer": response}
-        return jsonify(message)
+    response = get_reply(text)
+    message = {"answer": response}
+    return jsonify(message)
 
 
 @app.post("/predict")
