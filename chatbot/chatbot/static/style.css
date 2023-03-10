@@ -74,7 +74,8 @@ html {
   height: auto;
 }
 
-.send__button {
+.send__button__local,
+.send__button__openai {
   padding: 6px;
   background: transparent;
   border: none;

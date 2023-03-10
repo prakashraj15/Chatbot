@@ -3,7 +3,8 @@ class Chatbox {
     this.args = {
       openButton: document.querySelector(".chatbox__button"),
       chatBox: document.querySelector(".chatbox__support"),
-      sendButton: document.querySelector(".send__button"),
+      sendButtonLocal: document.querySelector(".send__button__local"),
+      sendButtonOpenAi: document.querySelector(".send__button__openai"),
     };
 
     this.state = false;
@@ -11,18 +12,27 @@ class Chatbox {
   }
 
   display() {
-    const { openButton, chatBox, sendButton } = this.args;
+    const { openButton, chatBox, sendButtonLocal, sendButtonOpenAi } =
+      this.args;
 
-    openButton.addEventListener("click", () => this.toggleState(chatBox));
-
-    sendButton.addEventListener("click", () => this.onSendButton(chatBox));
-
-    const node = chatBox.querySelector("input");
-    node.addEventListener("keyup", ({ key }) => {
-      if (key === "Enter") {
-        this.onSendButton(chatBox);
-      }
+    openButton.addEventListener("click", () => {
+      this.toggleState(chatBox);
     });
+
+    sendButtonLocal.addEventListener("click", () =>
+      this.onSendButtonLocal(chatBox)
+    );
+
+    sendButtonOpenAi.addEventListener("click", () =>
+      this.onSendButtonOpenAi(chatBox)
+    );
+
+    // const node = chatBox.querySelector("input");
+    // node.addEventListener("keyup", ({ key }) => {
+    //   if (key === "Enter") {
+    //     this.onSendButtonLocal(chatBox);
+    //   }
+    // });
   }
 
   toggleState(chatbox) {
@@ -31,20 +41,61 @@ class Chatbox {
     // show or hides the box
     if (this.state) {
       chatbox.classList.add("chatbox--active");
+      this.messages.push({
+        name: "Sam",
+        message: "Welcome to Chatbot!!",
+      });
+      this.updateChatText(chatbox);
     } else {
       chatbox.classList.remove("chatbox--active");
+      this.messages = [];
+      this.updateChatText(chatbox);
     }
   }
 
-  onSendButton(chatbox) {
+  onSendButtonOpenAi(chatbox) {
     var textField = chatbox.querySelector("input");
     let text1 = textField.value;
+
+    let msg1 = { name: "User", message: text1 };
+    this.messages.push(msg1);
+
     if (text1 === "") {
       return;
     }
 
+    fetch($SCRIPT_ROOT + "/openAi", {
+      method: "POST",
+      body: JSON.stringify({ message: text1 }),
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((r) => r.json())
+      .then((r) => {
+        let msg2 = { name: "Sam", message: r.answer };
+        this.messages.push(msg2);
+        this.updateChatText(chatbox);
+        textField.value = "";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        this.updateChatText(chatbox);
+        textField.value = "";
+      });
+  }
+
+  onSendButtonLocal(chatbox) {
+    var textField = chatbox.querySelector("input");
+    let text1 = textField.value;
+
     let msg1 = { name: "User", message: text1 };
     this.messages.push(msg1);
+
+    if (text1 === "") {
+      return;
+    }
 
     fetch($SCRIPT_ROOT + "/predict", {
       method: "POST",
