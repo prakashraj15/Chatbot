@@ -24,7 +24,7 @@ class Chatbox {
     const node = chatBox.querySelector("input");
     node.addEventListener("keyup", ({ key }) => {
       if (key === "Enter") {
-        this.onSendButtonLocal(chatBox);
+        this.onSendButtonOpenAi(chatBox);
       }
     });
   }
@@ -59,39 +59,6 @@ class Chatbox {
     }
 
     fetch($SCRIPT_ROOT + "/openAi", {
-      method: "POST",
-      body: JSON.stringify({ message: text1 }),
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((r) => r.json())
-      .then((r) => {
-        let msg2 = { name: "Sam", message: r.answer };
-        this.messages.push(msg2);
-        this.updateChatText(chatbox);
-        textField.value = "";
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        this.updateChatText(chatbox);
-        textField.value = "";
-      });
-  }
-
-  onSendButtonLocal(chatbox) {
-    var textField = chatbox.querySelector("input");
-    let text1 = textField.value;
-
-    let msg1 = { name: "User", message: text1 };
-    this.messages.push(msg1);
-
-    if (text1 === "") {
-      return;
-    }
-
-    fetch($SCRIPT_ROOT + "/predict", {
       method: "POST",
       body: JSON.stringify({ message: text1 }),
       mode: "cors",
